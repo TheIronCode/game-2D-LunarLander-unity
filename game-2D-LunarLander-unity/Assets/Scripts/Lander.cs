@@ -13,15 +13,32 @@ public class Lander : MonoBehaviour
 
 
     private Rigidbody2D landerRigidbody2D;
+    private float fuelAmount;
+    private float maxFuelAmount = 10f;
+
 
     private void Awake()
     {
         landerRigidbody2D = GetComponent<Rigidbody2D>();
+
+        fuelAmount = maxFuelAmount;
     }
 
     private void FixedUpdate()
     {
+        Debug.Log(fuelAmount);
         OnBeforeForse?.Invoke(this, EventArgs.Empty);
+        if (fuelAmount <= 0)
+        {
+            return;
+        }
+
+        if (Keyboard.current.upArrowKey.isPressed ||
+            Keyboard.current.leftArrowKey.isPressed ||
+            Keyboard.current.rightArrowKey.isPressed)
+        {
+            ConsumeFuel();
+        }
 
         if (Keyboard.current.upArrowKey.isPressed)
         {
@@ -88,4 +105,23 @@ public class Lander : MonoBehaviour
         Debug.Log("Score: " +  score);
     }
 
+    private void OnTriggerEnter2D(Collider2D collider2D)
+    {
+        if (collider2D.gameObject.TryGetComponent(out FuelPickup fuelPickup))
+        {
+            float addFuelAmount = 5f;
+            fuelAmount += addFuelAmount;
+            if (fuelAmount > maxFuelAmount)
+            {
+                fuelAmount = maxFuelAmount;
+            }
+            fuelPickup.DestroySelf();
+        }
+    }
+
+    private void ConsumeFuel()
+    {
+        float fuelConsumptionAmount = 1f;
+        fuelAmount -= fuelConsumptionAmount * Time.deltaTime;
+    }
 }
