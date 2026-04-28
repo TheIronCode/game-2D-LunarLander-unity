@@ -1,8 +1,17 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class Lander : MonoBehaviour
 {
+
+    public event EventHandler OnUpForse;
+    public event EventHandler OnLeftForse;
+    public event EventHandler OnRightForse;
+    public event EventHandler OnBeforeForse;
+
+
     private Rigidbody2D landerRigidbody2D;
 
     private void Awake()
@@ -12,20 +21,25 @@ public class Lander : MonoBehaviour
 
     private void FixedUpdate()
     {
+        OnBeforeForse?.Invoke(this, EventArgs.Empty);
+
         if (Keyboard.current.upArrowKey.isPressed)
         {
             float forse = 15f;
             landerRigidbody2D.AddForce(forse * transform.up);
+            OnUpForse?.Invoke(this, EventArgs.Empty);
         }
         if (Keyboard.current.leftArrowKey.isPressed)
         {
             float turnSpeed = 1.5f;
             landerRigidbody2D.AddTorque(turnSpeed);
+            OnLeftForse?.Invoke(this, EventArgs.Empty);
         }
         if (Keyboard.current.rightArrowKey.isPressed)
         {
             float turnSpeed = -1.5f;
             landerRigidbody2D.AddTorque(turnSpeed);
+            OnRightForse?.Invoke(this, EventArgs.Empty);
         }
     }
 
