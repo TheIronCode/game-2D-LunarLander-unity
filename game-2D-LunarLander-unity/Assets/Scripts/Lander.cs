@@ -5,12 +5,18 @@ using UnityEngine.InputSystem;
 
 public class Lander : MonoBehaviour
 {
+    public static Lander Instance { get; private set; }
 
     public event EventHandler OnUpForse;
     public event EventHandler OnLeftForse;
     public event EventHandler OnRightForse;
     public event EventHandler OnBeforeForse;
-
+    public event EventHandler OnCoinPickup;
+    public event EventHandler<OnLandedEventArgs> OnLanded;
+    public class OnLandedEventArgs : EventArgs
+    {
+        public int score;
+    }
 
     private Rigidbody2D landerRigidbody2D;
     private float fuelAmount;
@@ -19,6 +25,7 @@ public class Lander : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         landerRigidbody2D = GetComponent<Rigidbody2D>();
 
         fuelAmount = maxFuelAmount;
@@ -26,7 +33,6 @@ public class Lander : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(fuelAmount);
         OnBeforeForse?.Invoke(this, EventArgs.Empty);
         if (fuelAmount <= 0)
         {
@@ -103,6 +109,10 @@ public class Lander : MonoBehaviour
         int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScoreMultiplier());
 
         Debug.Log("Score: " +  score);
+
+        OnLanded?.Invoke(this, new OnLandedEventArgs {
+            score = score,
+        });
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
@@ -116,6 +126,12 @@ public class Lander : MonoBehaviour
                 fuelAmount = maxFuelAmount;
             }
             fuelPickup.DestroySelf();
+        }
+
+        if (collider2D.gameObject.TryGetComponent(out CoinPickup coinPickup))
+        {
+            OnCoinPickup?.Invoke(this, EventArgs.Empty);
+            coinPickup.DestroySelf();
         }
     }
 
