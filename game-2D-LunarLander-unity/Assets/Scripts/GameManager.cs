@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Lander_OnCoinPickup(object sender, System.EventArgs e)
     {
-        AddScore(500);
+        AddScore(100);
     }
 
     public void AddScore(int addScoreAmount)
