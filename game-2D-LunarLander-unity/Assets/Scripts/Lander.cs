@@ -171,15 +171,15 @@ public class Lander : MonoBehaviour
 
         float maxScoreAmountLandingAngle = 100;
         float scoreDotVectorMultiplier = 10f;
-        float landingAngleScore = maxScoreAmountLandingAngle - Mathf.Abs(dotVector - 1f) * scoreDotVectorMultiplier * maxScoreAmountLandingAngle;
+        int landingAngleScore = Mathf.RoundToInt(maxScoreAmountLandingAngle - Mathf.Abs(dotVector - 1f) * scoreDotVectorMultiplier * maxScoreAmountLandingAngle);
 
         float maxScoreAmountLandingSpeed = 100;
-        float landingSpeedScore = (softLandingVelocityMagnitude - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed;
+        int landingSpeedScore = Mathf.RoundToInt((softLandingVelocityMagnitude - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed);
 
         Debug.Log("LandingAngleScore: " + landingAngleScore);
         Debug.Log("LandingSpeedScore: " + landingSpeedScore);
 
-        int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore + GameManager.Instance.GetScore()) * landingPad.GetScoreMultiplier());
+        int score = (landingAngleScore + landingSpeedScore + GameManager.Instance.GetScore()) * landingPad.GetScoreMultiplier();
 
         Debug.Log("Score: " +  score);
 
