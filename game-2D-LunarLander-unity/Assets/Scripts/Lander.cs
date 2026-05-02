@@ -70,9 +70,9 @@ public class Lander : MonoBehaviour
         {
             default:
             case State.WaitingToStart:
-                if (Keyboard.current.upArrowKey.isPressed ||
-                    Keyboard.current.leftArrowKey.isPressed ||
-                    Keyboard.current.rightArrowKey.isPressed)
+                if (GameInput.Instance.IsUpActionPressed() ||
+                    GameInput.Instance.IsLeftActionPressed() ||
+                    GameInput.Instance.IsRightActionPressed())
                 {
                     landerRigidbody2D.gravityScale = GRAVITY_NORMAL;
                     SetState(State.Normal);
@@ -84,26 +84,26 @@ public class Lander : MonoBehaviour
                     return;
                 }
 
-                if (Keyboard.current.upArrowKey.isPressed ||
-                    Keyboard.current.leftArrowKey.isPressed ||
-                    Keyboard.current.rightArrowKey.isPressed)
+                if (GameInput.Instance.IsUpActionPressed() ||
+                    GameInput.Instance.IsLeftActionPressed() ||
+                    GameInput.Instance.IsRightActionPressed())
                 {
                     ConsumeFuel();
                 }
 
-                if (Keyboard.current.upArrowKey.isPressed)
+                if (GameInput.Instance.IsUpActionPressed())
                 {
                     float forse = 15f;
                     landerRigidbody2D.AddForce(forse * transform.up);
                     OnUpForse?.Invoke(this, EventArgs.Empty);
                 }
-                if (Keyboard.current.leftArrowKey.isPressed)
+                if (GameInput.Instance.IsLeftActionPressed())
                 {
                     float turnSpeed = 1.5f;
                     landerRigidbody2D.AddTorque(turnSpeed);
                     OnLeftForse?.Invoke(this, EventArgs.Empty);
                 }
-                if (Keyboard.current.rightArrowKey.isPressed)
+                if (GameInput.Instance.IsRightActionPressed())
                 {
                     float turnSpeed = -1.5f;
                     landerRigidbody2D.AddTorque(turnSpeed);
