@@ -28,6 +28,18 @@ public class LanderVisual : MonoBehaviour
         lander.OnLanded += Lander_OnLanded;
     }
 
+    private void OnDestroy()
+    {
+        if (lander != null)
+        {
+            lander.OnUpForse -= Lander_OnUpForse;
+            lander.OnLeftForse -= Lander_OnLeftForse;
+            lander.OnRightForse -= Lander_OnRightForse;
+            lander.OnBeforeForse -= Lander_OnBeforeForse;
+            lander.OnLanded -= Lander_OnLanded;
+        }
+    }
+
     private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e)
     {
         switch (e.landingType)

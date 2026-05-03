@@ -42,6 +42,21 @@ public class GameManager : MonoBehaviour
         LoadCurrentLevel();
     }
 
+    private void OnDestroy()
+    {
+        if (Lander.Instance != null)
+        {
+            Lander.Instance.OnCoinPickup -= Lander_OnCoinPickup;
+            Lander.Instance.OnLanded -= Lander_OnLanded;
+            Lander.Instance.OnStateChange -= Langer_OnStateChange;
+        }
+
+        if (GameInput.Instance != null)
+        {
+            GameInput.Instance.OnMenuButtonPressed -= GameInput_OnMenuButtonPressed;
+        }
+    }
+
     private void GameInput_OnMenuButtonPressed(object sender, System.EventArgs e)
     {
         PauseUnpauseGame();

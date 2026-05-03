@@ -18,7 +18,7 @@ public class PauseUI : MonoBehaviour
             SoundManager.Instance.ChangeSoundVolume();
             soundVolumeTextMesh.text = "SOUND " + SoundManager.Instance.GetSoundVolume();
         });
-        soundVolumeButton.onClick.AddListener(() =>
+        musicVolumeButton.onClick.AddListener(() =>
         {
             MusicManager.Instance.ChangeMusicVolume();
             musicVolumeTextMesh.text = "MUSIC " + MusicManager.Instance.GetMusicVolume();
@@ -42,6 +42,15 @@ public class PauseUI : MonoBehaviour
         musicVolumeTextMesh.text = "MUSIC " + MusicManager.Instance.GetMusicVolume();
 
         Hide();
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGamePaused -= GameManager_OnGamePaused;
+            GameManager.Instance.OnGameUnpaused -= GameManager_OnGameUnpaused;
+        }
     }
 
     private void GameManager_OnGameUnpaused(object sender, System.EventArgs e)

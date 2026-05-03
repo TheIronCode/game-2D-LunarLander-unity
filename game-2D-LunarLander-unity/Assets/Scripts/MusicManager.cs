@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
@@ -12,11 +11,16 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource musicAudioSourse;
 
-    public event EventHandler OnMusicVolumeChange;
-
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         musicAudioSourse = GetComponent<AudioSource>();
         musicAudioSourse.time = musicTime;
@@ -35,7 +39,6 @@ public class MusicManager : MonoBehaviour
     {
         musicVolume = (musicVolume + 1) % MUSIC_VOLUME_MAX;
         musicAudioSourse.volume = GetMusicVolumeNormalized();
-        OnMusicVolumeChange?.Invoke(this, EventArgs.Empty);
     }
 
     public int GetMusicVolume()

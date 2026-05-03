@@ -29,6 +29,16 @@ public class SoundManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (Lander.Instance != null)
+        {
+            Lander.Instance.OnFuelPickup -= Lander_OnFuelPickup;
+            Lander.Instance.OnCoinPickup -= Lander_OnCoinPickup;
+            Lander.Instance.OnLanded -= Lander_OnLanded;
+        }
+    }
+
     private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e)
     {
         switch (e.landingType)

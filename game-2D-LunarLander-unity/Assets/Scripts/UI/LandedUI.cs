@@ -28,6 +28,14 @@ public class LandedUI : MonoBehaviour
         Hide();
     }
 
+    private void OnDestroy()
+    {
+        if (Lander.Instance != null)
+        {
+            Lander.Instance.OnLanded -= Lander_OnLanded;
+        }
+    }
+
     private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e)
     {
         if (e.landingType == Lander.LandingType.Success)

@@ -5,6 +5,9 @@ public class LanderAudio : MonoBehaviour
     [SerializeField] private AudioSource thrusterAudioSourse;
 
     private Lander lander;
+    private bool isThrusterActive;
+    private int activeThrustersCount = 0;
+    private float fadeSpeed = 20f;
 
     private void Start()
     {
@@ -14,42 +17,54 @@ public class LanderAudio : MonoBehaviour
         lander.OnUpForse += Lander_OnUpForse;
         lander.OnLeftForse += Lander_OnLeftForse;
         lander.OnRightForse += Lander_OnRightForse;
-        SoundManager.Instance.OnSoundVolumeChange += SoundManager_OnSoundVolumeChange;
 
-        thrusterAudioSourse.Pause();
+        thrusterAudioSourse.loop = true;
+        thrusterAudioSourse.volume = 0f;
+        thrusterAudioSourse.Play();
     }
 
-    private void SoundManager_OnSoundVolumeChange(object sender, System.EventArgs e)
+    private void Update()
     {
-        thrusterAudioSourse.volume = SoundManager.Instance.GetSoundVolumeNormalized();
+        float soundVolumeNormalized = SoundManager.Instance != null ? SoundManager.Instance.GetSoundVolumeNormalized() : 1f;
+        float targetVolume = isThrusterActive ? soundVolumeNormalized : 0f;
+        thrusterAudioSourse.volume = Mathf.MoveTowards(thrusterAudioSourse.volume, targetVolume, fadeSpeed * Time.deltaTime);
+    }
+
+    private void OnDestroy()
+    {
+        if (lander != null)
+        {
+            lander.OnBeforeForse -= Lander_OnBeforeForse;
+            lander.OnUpForse -= Lander_OnUpForse;
+            lander.OnLeftForse -= Lander_OnLeftForse;
+            lander.OnRightForse -= Lander_OnRightForse;
+        }
     }
 
     private void Lander_OnRightForse(object sender, System.EventArgs e)
     {
-        if (!thrusterAudioSourse.isPlaying)
-        {
-            thrusterAudioSourse.Play();
-        }
+        activeThrustersCount++;
+        isThrusterActive = true;
     }
 
     private void Lander_OnLeftForse(object sender, System.EventArgs e)
     {
-        if (!thrusterAudioSourse.isPlaying)
-        {
-            thrusterAudioSourse.Play();
-        }
+        activeThrustersCount++;
+        isThrusterActive = true;
     }
 
     private void Lander_OnUpForse(object sender, System.EventArgs e)
     {
-        if (!thrusterAudioSourse.isPlaying)
-        {
-            thrusterAudioSourse.Play();
-        }
+        activeThrustersCount++;
+        isThrusterActive = true;
     }
 
     private void Lander_OnBeforeForse(object sender, System.EventArgs e)
     {
-        thrusterAudioSourse.Pause();
+        if (activeThrustersCount <= 0)
+        {
+            isThrusterActive = false;
+        }
+        activeThrustersCount = 0;
     }
 }
