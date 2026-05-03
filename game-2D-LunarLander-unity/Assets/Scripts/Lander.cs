@@ -123,6 +123,12 @@ public class Lander : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision2D)
     {
+        // Ignore further collisions after landing: GetScore() already includes the full level total.
+        if (state != State.Normal)
+        {
+            return;
+        }
+
         if (!collision2D.gameObject.TryGetComponent(out LandingPad landingPad))
         {
             OnLanded?.Invoke(this, new OnLandedEventArgs
